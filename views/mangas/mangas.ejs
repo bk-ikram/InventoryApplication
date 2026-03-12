@@ -1,0 +1,29 @@
+<!-- views/index.ejs -->
+<!DOCTYPE html>
+<html>
+<head>
+  <title><%= title %></title>
+</head>
+<body>
+  <%- include('../navBar') %>
+  <h1><%= title %></h1>
+  <!-- In views/index.ejs -->
+   <button><a href="/mangas/form">Add a new Manga</a></button>
+   <% if(locals.mangas){ %> 
+   <% locals.mangas.forEach((m) => {%> 
+    <div>
+      <h3>Title: <%= m.title %></h3>
+      <h3>Author: <%= m.author %></h3>
+      <h3>Genres: <%= m.genres.join(', ')%></h3>
+      <div>
+        <!--form action="/mangas/<%=m.mangaid%>/update" method="get"><button type="submit">Update</button></form> -->
+        <button><a href="/mangas/<%=m.mangaid%>/update">Update</a></button>
+        <form action="/mangas/<%=m.mangaid%>/delete" method="post"><button type="submit">Delete</button></form>
+      </div>
+    </div>
+
+
+   <% })%>
+   <% }%>
+</body>
+</html>

@@ -1,0 +1,71 @@
+<!-- views/index.ejs -->
+<!DOCTYPE html>
+<html>
+<head>
+  <title><%= title %></title>
+</head>
+<body>
+    <%
+        const formAction = locals.manga?.mangaid
+                            ? `/mangas/${locals.manga.mangaid}/update`
+                            : '/mangas/form';
+    %>
+  <%- include('../navBar')%>
+  <h1><%= title %></h1>
+  <!-- In views/index.ejs -->
+   <%- include("../errors.ejs") %>
+    <form
+        action = <%= formAction %> 
+        method="post"
+    >
+        <p>
+            <label for="title">
+                <h2>Title: </h2>
+            </label>
+            <input 
+                type="text" 
+                id="title" 
+                name="title"
+                value= "<%= manga?.title ?? '' %>"
+            >
+        </p>
+        <p>
+            <label for="author">
+                <h2>Author: </h2>
+            </label>
+            <select name="author">
+                <% locals.authors.forEach((a) => { %>
+                    <option 
+                        value="<%= a.authorid%>"
+                        <%= locals.manga?.authorid === a.authorid ? "selected" : "" %>
+                    >
+                        <%= a.name%>
+                    </option>
+                <% });%>
+            </select>
+        </p>
+        <p>
+            <h2>Genres: </h2>
+            <% locals.genres.forEach( (g) => {%>
+            <input 
+                type="checkbox" 
+                id="<%= g.genreid%>" 
+                name="genre" 
+                value="<%= g.genreid%>"
+                <%= locals.manga?.genres.includes(g.genreid) ? "checked" : "" %>
+            >
+            <label for="<%= g.genreid%>">
+                <%= g.genre%>
+            </label>
+            
+            <% }); %>
+        </p>
+        <button type="submit">
+            <%= locals.manga?.mangaid 
+            ? "Update"
+            : "Add"
+            %>
+        </button>
+    </form>
+</body>
+</html>

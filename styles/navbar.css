@@ -1,0 +1,15 @@
+.navbar{
+    width: 100vw;
+    height: 40px;
+    position: sticky;
+    top: 0px;
+}
+
+.navbar ul{
+    display: flex;
+    justify-content: center;
+    gap: 50px;
+    text-decoration: none;
+    list-style: none;
+}
+
