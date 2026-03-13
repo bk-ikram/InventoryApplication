@@ -1,0 +1,40 @@
+<!-- views/index.ejs -->
+<!DOCTYPE html>
+<html>
+<head>
+  <title><%= title %></title>
+</head>
+<body>
+    <%
+        const formAction = locals.genre?.genreid
+                            ? `/genres/${locals.genre.genreid}/update`
+                            : '/genres/form';
+    %>
+  <%- include('../navBar')%>
+  <h1><%= title %></h1>
+  <!-- In views/index.ejs -->
+   <%- include("../errors.ejs") %>
+    <form
+        action = <%= formAction %> 
+        method="post"
+    >
+        <p>
+            <label for="genre">
+                <h2>Genre: </h2>
+            </label>
+            <input 
+                type="text" 
+                id="genre" 
+                name="genre"
+                value= "<%= locals.genre?.genre ?? '' %>"
+            >
+        </p>
+        <button type="submit">
+            <%= locals.genre?.genreid 
+            ? "Update"
+            : "Add"
+            %>
+        </button>
+    </form>
+</body>
+</html>

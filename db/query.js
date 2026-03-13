@@ -42,6 +42,13 @@ FROM author
 WHERE authorid = $1;
 `;
 
+const getGenreSQL = `
+SELECT genreid
+      ,genre
+FROM genre
+WHERE genreid = $1;
+`;
+
 const AllAuthorsSQL = `
 SELECT authorid
       ,name
@@ -59,6 +66,14 @@ INSERT INTO manga (title, authorID)
 VALUES ($1,$2)
 RETURNING mangaid;
 `
+
+const CreateGenreSQL = `
+INSERT INTO genre (genre)
+VALUES ($1)
+RETURNING genreid;
+`
+
+
 const CreateMangaGenreSQL = `
 INSERT INTO mangagenres (mangaID, genreID)
 VALUES ($1,$2);
@@ -76,6 +91,12 @@ SET authorid = $2
 WHERE mangaid = $1;
 `
 
+const UpdateGenreSQL = `
+UPDATE genre
+SET genre = $2
+WHERE genreid = $1;
+`
+
 const DeleteMangaGenresSQL = `
 DELETE FROM mangagenres
 WHERE mangaid = $1;
@@ -86,6 +107,11 @@ DELETE FROM manga
 WHERE mangaid = $1;
 `
 
+const DeleteGenreSQL = `
+DELETE FROM genre
+WHERE genreid = $1;
+`
+
 async function getAllMangas(){
     const mangas = await pool.query(AllMangasSQL);
     return mangas.rows;
@@ -93,6 +119,11 @@ async function getAllMangas(){
 
 async function getManga(mangaid){
     const mangas = await pool.query(mangaSQL,[mangaid]);
+    return mangas.rows[0];
+ };
+
+ async function getGenre(genreid){
+    const mangas = await pool.query(getGenreSQL,[genreid]);
     return mangas.rows[0];
  };
 
@@ -122,6 +153,12 @@ async function getMangaByTitle(title){
       return mangaid;
  }
 
+async function CreateGenre(genre){
+      const result = await pool.query(CreateGenreSQL,[genre]);
+      const genreid = result.rows[0].genreid;
+      return genreid;
+ }
+
 async function CreateMangaGenre(mangaid,genres){
       await genres.forEach( g => {
             pool.query(CreateMangaGenreSQL,[mangaid,g]);
@@ -136,21 +173,33 @@ async function UpdateManga(mangaid,title,authorid,genres){
       await CreateMangaGenre(mangaid,genres);
  }
 
+ async function UpdateGenre(genreid,genre){
+      await pool.query(UpdateGenreSQL,[genreid,genre]);
+ }
+
 async function DeleteManga(mangaid){
       await pool.query(DeleteMangaSQL,[mangaid])
+ }
+
+ async function DeleteGenre(mangaid){
+      await pool.query(DeleteGenreSQL,[mangaid])
  }
 
  module.exports ={
     getAllMangas
     ,getManga
     ,getAuthor
+    ,getGenre
     ,getAllAuthors
     ,getAllGenres
     ,CreateManga
+    ,CreateGenre
     ,CreateMangaGenre
     ,getMangaByTitle
     ,UpdateManga
+    ,UpdateGenre
     ,DeleteManga
+    ,DeleteGenre
  }
  
 

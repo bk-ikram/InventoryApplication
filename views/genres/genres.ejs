@@ -1,0 +1,28 @@
+<!-- views/index.ejs -->
+<!DOCTYPE html>
+<html>
+<head>
+  <title><%= title %></title>
+</head>
+<body>
+  <%- include('../navBar') %>
+  <h1><%= title %></h1>
+  <!-- In views/index.ejs -->
+   <button><a href="/genres/form">Add a new Genre</a></button>
+   <% if(locals.genres){ %> 
+   <% locals.genres.forEach((g) => {%> 
+    <div>
+      <h3><%= g.genre %></h3>
+      <div>
+        <button><a href="/genres/<%=g.genreid%>/update">Update</a></button>
+        <form action="/genres/<%=g.genreid%>/delete" method="post">
+          <button type="submit" onclick="return confirm('Are you sure you want to proceed?')">Delete</button>
+        </form>
+      </div>
+    </div>
+
+
+   <% })%>
+   <% }%>
+</body>
+</html>

@@ -5,7 +5,7 @@ const path = require("node:path");
 const appRouter = require("./routes/appRouter");
 const mangasRouter = require("./routes/mangasRouter");
 //const authorsRouter = require("./routes/authorsRouter");
-//const genresRouter = require("./routes/genresRouter");
+const genresRouter = require("./routes/genresRouter");
 
 app.set("views", path.join(__dirname, "views"));
 app.set("view engine", "ejs");
@@ -16,7 +16,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use("/", appRouter);
 app.use("/mangas", mangasRouter);
 //app.use("/authors", authorsRouter);
-//app.use("/genres", genresRouter);
+app.use("/genres", genresRouter);
 
 const PORT = process.env.PORT || 3000;
 
