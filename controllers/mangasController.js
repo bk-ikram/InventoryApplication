@@ -36,3 +36,9 @@ exports.mangasUpdatePost = async (req, res) => {
   await db.UpdateManga(mangaid,title,author,genre);
   res.redirect("/mangas");
 };
+
+exports.mangaDeletePost = async (req, res) => {
+  const mangaid = req.params.mangaid;
+  await db.DeleteManga(mangaid);
+  res.redirect("/mangas");
+};

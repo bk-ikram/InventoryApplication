@@ -81,6 +81,11 @@ DELETE FROM mangagenres
 WHERE mangaid = $1;
 `
 
+const DeleteMangaSQL = `
+DELETE FROM manga
+WHERE mangaid = $1;
+`
+
 async function getAllMangas(){
     const mangas = await pool.query(AllMangasSQL);
     return mangas.rows;
@@ -117,19 +122,22 @@ async function getMangaByTitle(title){
       return mangaid;
  }
 
-  async function CreateMangaGenre(mangaid,genres){
+async function CreateMangaGenre(mangaid,genres){
       await genres.forEach( g => {
             pool.query(CreateMangaGenreSQL,[mangaid,g]);
       });
  }
 
-   async function UpdateManga(mangaid,title,authorid,genres){
+async function UpdateManga(mangaid,title,authorid,genres){
       await pool.query(UpdateMangaTitleSQL,[mangaid,title]);
       await pool.query(UpdateMangaAuthorSQL,[mangaid,authorid]);
       //to update the genres, first delete existing ones, then insert
       await pool.query(DeleteMangaGenresSQL,[mangaid])
       await CreateMangaGenre(mangaid,genres);
-      console.log("The manga has been updated");
+ }
+
+async function DeleteManga(mangaid){
+      await pool.query(DeleteMangaSQL,[mangaid])
  }
 
  module.exports ={
@@ -142,6 +150,7 @@ async function getMangaByTitle(title){
     ,CreateMangaGenre
     ,getMangaByTitle
     ,UpdateManga
+    ,DeleteManga
  }
  
 

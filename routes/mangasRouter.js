@@ -38,10 +38,9 @@ mangasRouter.post("/:mangaid/update"
  
                     })), controller.mangasUpdatePost);
 
-//to update/create a manga
-//mangasRouter.post("/form", controller.mangasFormPost); 
-
 //to delete a manga
-//mangasRouter.post("/delete", controller.mangasDeletePost);
+mangasRouter.post("/:mangaid/delete", controller.mangaDeletePost); 
+
+
 
 module.exports = mangasRouter; 
