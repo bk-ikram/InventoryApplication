@@ -175,10 +175,11 @@ async function CreateGenre(genre){
  }
 
 async function CreateMangaGenre(mangaid,genres){
-      await genres.forEach( g => {
+      await Promise.all (genres.map( g => {
             pool.query(CreateMangaGenreSQL,[mangaid,g]);
-      });
- }
+      })
+);
+}
 
  async function CreateAuthor(name){
       const result = await pool.query(CreateAuthorSQL,[name]);

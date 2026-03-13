@@ -66,7 +66,7 @@ const SQL = `
     SELECT setval('mangagenres_id_seq', (SELECT MAX(id) FROM mangagenres));
 `
 
-async function main(){
+async function resetData(){
     await client.connect();
     await client.query(SQL);
     await client.end();
@@ -74,5 +74,5 @@ async function main(){
 
 }
 
-main();
+module.exports = resetData;
 

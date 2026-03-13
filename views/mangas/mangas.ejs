@@ -6,6 +6,9 @@
 </head>
 <body>
   <%- include('../navBar') %>
+  <form action="/mangas/reset" method="post">
+    <button type="submit" onclick="return confirm('Reset all data to stock?')">Reset Stock Data</button>
+  </form>
   <h1><%= title %></h1>
   <!-- In views/index.ejs -->
    <button><a href="/mangas/form">Add a new Manga</a></button>

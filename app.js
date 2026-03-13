@@ -18,6 +18,11 @@ app.use("/mangas", mangasRouter);
 app.use("/authors", authorsRouter);
 app.use("/genres", genresRouter);
 
+app.use((err, req, res, next) => {
+    console.error(err);
+    res.status(500).send("Something went wrong");
+});
+
 const PORT = process.env.PORT || 3000;
 
 app.listen(PORT,(error)=>{

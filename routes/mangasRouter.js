@@ -31,7 +31,7 @@ mangasRouter.post("/form"
 mangasRouter.post("/:mangaid/update"
                     ,normalizeManga
                     ,validateExistingManga
-                    ,handleValidation("../views/mangas/form",async() => ({ 
+                    ,handleValidation("../views/mangas/form",async(req) => ({ 
                         manga: req.parameters.mangaid,
                         authors: await db.getAllAuthors(),
                         genres: await db.getAllGenres()
@@ -41,6 +41,7 @@ mangasRouter.post("/:mangaid/update"
 //to delete a manga
 mangasRouter.post("/:mangaid/delete", controller.mangaDeletePost); 
 
-
+//to reset stock data
+mangasRouter.post("/reset", controller.mangaResetPost); 
 
 module.exports = mangasRouter; 

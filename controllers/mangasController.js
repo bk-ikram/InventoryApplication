@@ -1,4 +1,5 @@
 const db = require('../db/query');
+const resetData = require("../db/initDBData");
 
 exports.mangasGet = async (req, res) => {
   const genreid = req.query.genreid;
@@ -45,5 +46,10 @@ exports.mangasUpdatePost = async (req, res) => {
 exports.mangaDeletePost = async (req, res) => {
   const mangaid = req.params.mangaid;
   await db.DeleteManga(mangaid);
+  res.redirect("/mangas");
+};
+
+exports.mangaResetPost = async (req, res) => {
+  await resetData();
   res.redirect("/mangas");
 };

@@ -8,7 +8,7 @@ const lengthErr = "must be between 1 and 50 characters.";
 const existingMangaTitleValidation = body("mangaid")
                                       .custom(async(mangaid) => {
                                         const mangaDetails = await getManga(mangaid);
-                                        if (mangaDetails == {}) throw new Error ("Attempting to update Manga that does not exist.")
+                                        if (!mangaDetails) throw new Error ("Attempting to update Manga that does not exist.")
                                       });
 
 
