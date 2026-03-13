@@ -6,9 +6,9 @@
 </head>
 <body>
     <%
-        const formAction = locals.genre?.genreid
-                            ? `/genres/${locals.genre.genreid}/update`
-                            : '/genres/form';
+        const formAction = locals.author?.authorid
+                            ? `/authors/${locals.author.authorid}/update`
+                            : '/authors/form';
     %>
   <%- include('../navBar')%>
   <h1><%= title %></h1>
@@ -19,19 +19,19 @@
         method="post"
     >
         <p>
-            <label for="genre">
-                <h2>Genre: </h2>
+            <label for="author">
+                <h2>Author: </h2>
             </label>
             <input 
                 type="text" 
-                id="genre" 
-                name="genre"
-                value= "<%= locals.genre?.genre ?? '' %>"
+                id="author" 
+                name="author"
+                value= "<%= locals.author?.name ?? '' %>"
             >
         </p>
-        <input type="hidden" name="genreid" value = "<%=locals.genre?.genreid %>">
+        <input type="hidden" name="authorid" value = "<%=locals.author?.authorid %>">
         <button type="submit">
-            <%= locals.genre?.genreid 
+            <%= locals.author?.authorid 
             ? "Update"
             : "Add"
             %>

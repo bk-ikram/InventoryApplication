@@ -1,9 +1,11 @@
  const { pool } = require('./connections.js');
 
-const AllMangasSQL = `
+
+const SearchMangasBaseSQL = `
 SELECT m.mangaid
       ,m.title
       ,a.name as author
+      ,m.authorid
       ,ARRAY_AGG(g.genre) as genres
 FROM manga m
 LEFT JOIN author a
@@ -12,8 +14,8 @@ LEFT JOIN mangagenres mg
 ON mg.mangaid = m.mangaid
 LEFT JOIN genre g
 ON g.genreid = mg.genreid
-group by m.mangaid,m.title,a.name;
 `;
+
 
 const mangaSQL = `
 SELECT m.mangaid
@@ -61,6 +63,7 @@ SELECT genreid
 FROM genre;
 `;
 
+
 const CreateMangaSQL = `
 INSERT INTO manga (title, authorID)
 VALUES ($1,$2)
@@ -73,6 +76,11 @@ VALUES ($1)
 RETURNING genreid;
 `
 
+const CreateAuthorSQL = `
+INSERT INTO author(name)
+VALUES ($1)
+RETURNING authorid;
+`
 
 const CreateMangaGenreSQL = `
 INSERT INTO mangagenres (mangaID, genreID)
@@ -97,6 +105,12 @@ SET genre = $2
 WHERE genreid = $1;
 `
 
+const UpdateAuthorSQL = `
+UPDATE author
+SET name = $2
+WHERE authorid = $1;
+`
+
 const DeleteMangaGenresSQL = `
 DELETE FROM mangagenres
 WHERE mangaid = $1;
@@ -112,10 +126,11 @@ DELETE FROM genre
 WHERE genreid = $1;
 `
 
-async function getAllMangas(){
-    const mangas = await pool.query(AllMangasSQL);
-    return mangas.rows;
- };
+const DeleteAuthorSQL = `
+DELETE FROM author
+WHERE authorid = $1;
+`
+
 
 async function getManga(mangaid){
     const mangas = await pool.query(mangaSQL,[mangaid]);
@@ -165,6 +180,13 @@ async function CreateMangaGenre(mangaid,genres){
       });
  }
 
+ async function CreateAuthor(name){
+      const result = await pool.query(CreateAuthorSQL,[name]);
+      const authorid = result.rows[0].authorid;
+      return authorid;
+ }
+
+
 async function UpdateManga(mangaid,title,authorid,genres){
       await pool.query(UpdateMangaTitleSQL,[mangaid,title]);
       await pool.query(UpdateMangaAuthorSQL,[mangaid,authorid]);
@@ -177,29 +199,62 @@ async function UpdateManga(mangaid,title,authorid,genres){
       await pool.query(UpdateGenreSQL,[genreid,genre]);
  }
 
+  async function UpdateAuthor(authorid,author){
+      await pool.query(UpdateAuthorSQL,[authorid,author]);
+ }
+
 async function DeleteManga(mangaid){
       await pool.query(DeleteMangaSQL,[mangaid])
  }
 
- async function DeleteGenre(mangaid){
-      await pool.query(DeleteGenreSQL,[mangaid])
+ async function DeleteGenre(genreid){
+      await pool.query(DeleteGenreSQL,[genreid])
  }
 
+  async function DeleteAuthor(authorid){
+      await pool.query(DeleteAuthorSQL,[authorid])
+ }
+
+
+ async function SearchMangas(genreid, authorid) {
+
+    const params = [];
+    let where = '';
+    let having = '';
+
+    if (authorid) {
+        params.push(authorid);
+        where = `WHERE m.authorid = $${params.length}`;
+    }
+
+    if (genreid) {
+        params.push(genreid);
+        having = `HAVING $${params.length} = ANY(ARRAY_AGG(g.genreid))`;
+    }
+
+    const query = `${SearchMangasBaseSQL} ${where} GROUP BY m.mangaid, m.title, a.name, m.authorid ${having};`;
+    const result = await pool.query(query, params);
+    return result.rows;
+}
+
  module.exports ={
-    getAllMangas
-    ,getManga
+     getManga
     ,getAuthor
     ,getGenre
     ,getAllAuthors
     ,getAllGenres
     ,CreateManga
     ,CreateGenre
+    ,CreateAuthor
     ,CreateMangaGenre
     ,getMangaByTitle
     ,UpdateManga
     ,UpdateGenre
+    ,UpdateAuthor
     ,DeleteManga
     ,DeleteGenre
+    ,DeleteAuthor
+    ,SearchMangas
  }
  
 

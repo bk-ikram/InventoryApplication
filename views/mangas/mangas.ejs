@@ -13,7 +13,7 @@
    <% locals.mangas.forEach((m) => {%> 
     <div>
       <h3>Title: <%= m.title %></h3>
-      <h3>Author: <%= m.author %></h3>
+      <h3>Author: <a href="/mangas?authorid=<%=m.authorid%>"><%= m.author %></a></h3>
       <h3>Genres: <%= m.genres.join(', ')%></h3>
       <div>
         <!--form action="/mangas/<%=m.mangaid%>/update" method="get"><button type="submit">Update</button></form> -->

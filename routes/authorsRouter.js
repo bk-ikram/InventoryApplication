@@ -5,13 +5,20 @@ const authorsRouter = Router();
 //to list all authors
 authorsRouter.get("/", controller.authorsGet);
 
-//to get form to update/create a manga
-authorsRouter.get("/", controller.authorsFormGet);
+//to get form to create an author
+authorsRouter.get("/form", controller.authorFormGet);
 
-//to update/create a manga
-authorsRouter.get("/", controller.authorsFormPost);
+//to create an author
+authorsRouter.post("/form", controller.authorCreatePost);
 
-//to delete a manga
-authorsRouter.get("/", controller.authorsDeletePost);
+//to get form to update an author
+authorsRouter.get("/:authorid/update", controller.authorFormGet);
+
+//to update an author
+authorsRouter.post("/:authorid/update", controller.authorUpdatePost);
+
+
+//to delete an author
+authorsRouter.post("/:authorid/delete", controller.authorDeletePost);
 
 module.exports = authorsRouter; 

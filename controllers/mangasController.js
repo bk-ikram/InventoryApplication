@@ -1,9 +1,14 @@
 const db = require('../db/query');
 
 exports.mangasGet = async (req, res) => {
-  const mangas = await db.getAllMangas();
+  const genreid = req.query.genreid;
+  const authorid = req.query.authorid;
+  const mangas = await db.SearchMangas(genreid,authorid);
+  const title = authorid || genreid
+                ? 'Manga Results'
+                : 'All Mangas'
   res.render("mangas/mangas", {
-    title: "All Mangas",
+    title: title,
     mangas: mangas
   });
 };
